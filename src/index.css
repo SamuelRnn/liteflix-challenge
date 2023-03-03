@@ -5,3 +5,7 @@
 :root {
   @apply text-white bg-dark;
 }
+
+.movie-miniature:hover .play-icon {
+  @apply bg-aqua text-dark border-dark;
+}

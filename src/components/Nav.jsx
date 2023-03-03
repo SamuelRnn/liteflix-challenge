@@ -40,8 +40,9 @@ export default function Nav() {
         </li>
         <li className="hidden md:flex rounded-full overflow-hidden">
           <ButtonBase className="h-10 w-10">
-            <div className="text-2xl">
+            <div className="text-2xl relative">
               <BiBell />
+              <div className="bg-aqua w-3 h-3 rounded-full top-0 right-0 absolute" />
             </div>
           </ButtonBase>
         </li>

@@ -1,11 +1,13 @@
 import { config } from "../config";
 import { BiChevronDown } from "react-icons/bi";
+import { BsPlay } from "react-icons/bs";
 import ButtonBase from "@mui/material/ButtonBase";
 import { useState } from "react";
 import Menu from "./Menu";
 import { AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
-export default function MoviesShowcase({ movies }) {
+export default function MoviesShowcase({ movies, onLoad, loading }) {
   const [selected, setSelected] = useState(0);
   const [open, setOpen] = useState(false);
   const toggleModal = () => {
@@ -15,7 +17,7 @@ export default function MoviesShowcase({ movies }) {
     <div className="flex flex-col max-w-[12rem] ml-auto gap-y-4 items-center">
       {/* select and menu container */}
       <div className="relative">
-        <ButtonBase onClick={toggleModal}>
+        <ButtonBase onClick={() => setOpen(true)}>
           <div className="uppercase font-thin px-2 py-1 w-fit flex items-center gap-x-1">
             <span className="text-zinc-300">ver: </span>
             <span className="text-white">populares</span>
@@ -37,16 +39,48 @@ export default function MoviesShowcase({ movies }) {
             />
           )}
         </AnimatePresence>
-        {/* movies */}
       </div>
-      {movies.map((movie) => (
-        <div className="bg-zinc-700 overflow-hidden" key={movie.id}>
-          <img
-            src={config.IMAGES_BASEPATH_w500 + movie.backdrop_path}
-            alt={movie.original_title}
-            className="object-cover"
-          />
-        </div>
+      {/* movies */}
+      {movies.map((movie, i) => (
+        <motion.div
+          key={movie.id}
+          variants={{
+            loaded: {
+              opacity: 1,
+              y: 0,
+              transition: {
+                duration: 0.8,
+                ease: "easeOut",
+              },
+            },
+            loading: {
+              opacity: 0,
+              y: 40,
+            },
+          }}
+          initial="loading"
+          animate={loading ? "loading" : "loaded"}
+          className="movie-miniature"
+        >
+          <div className="relative">
+            <img
+              src={config.IMAGES_BASEPATH_w500 + movie.backdrop_path}
+              alt={movie.original_title}
+              className="object-cover"
+              onLoad={onLoad}
+            />
+            <div className="absolute w-full h-full grid place-items-center bg-mask/40 top-0">
+              <div className="text-center">
+                <span className="mx-auto w-fit p-1 rounded-full border border-white/90 bg-mask/40 grid place-items-center play-icon transition-colors ease-out duration-500">
+                  <BsPlay className="text-2xl" />
+                </span>
+                <p className="mt-2 text-sm uppercase font-thin px-2 overflow-hidden whitespace-nowrap text-ellipsis max-w-[192px]">
+                  {movie.original_title}
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       ))}
     </div>
   );

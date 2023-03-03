@@ -11,13 +11,25 @@ export default function App() {
   const [cover, setCover] = useState(null);
   const [popularMovies, setPopularMovies] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadedImages, setLoadedImages] = useState(0);
+
   const fetchData = async () => {
     Promise.all([getFeaturedMovie(), getPopularMovies()]).then((res) => {
-      setPopularMovies(res[1]);
-      setCover(res[0]);
-      setTimeout(() => setLoading(false), 2000);
+      setTimeout(() => {
+        setPopularMovies(res[1]);
+        setCover(res[0]);
+      }, 500);
     });
   };
+  const onLoad = () => {
+    setLoadedImages((prevState) => {
+      if (prevState === 4) {
+        setLoading(false);
+      }
+      return prevState + 1;
+    });
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -25,22 +37,36 @@ export default function App() {
   return (
     <>
       <AnimatePresence>{loading && <LoaderScreen />}</AnimatePresence>
-      {!loading && (
+      {cover && popularMovies && (
         <main>
           <header className="h-screen relative overflow-hidden bg-black">
             {/* header background */}
             <motion.img
-              initial={{ scale: 1.5, opacity: 0.5, filter: "grayscale(1)" }}
-              whileInView={{ scale: 1, opacity: 1, filter: "grayscale(0)" }}
-              transition={{ duration: 1.8, ease: "easeOut", delay: 2 }}
+              initial="loading"
+              animate={loading ? "loading" : "charged"}
+              variants={{
+                charged: { scale: 1, opacity: 0.8 },
+                loading: { scale: 1.4, opacity: 0.8 },
+              }}
+              transition={{ duration: 2.3, ease: "circOut" }}
               className="absolute w-full h-full object-cover"
               src={config.IMAGES_BASEPATH + cover.backdrop_path}
               alt={cover.original_title}
+              onLoad={onLoad}
             />
             {/* nav container */}
-            <div className="fixed w-full h-20 z-50">
-              <Nav />
-            </div>
+            <AnimatePresence>
+              {!loading && (
+                <motion.div
+                  initial={{ opacity: 0, y: -100 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1.2 }}
+                  className="fixed w-full h-20 z-50"
+                >
+                  <Nav />
+                </motion.div>
+              )}
+            </AnimatePresence>
             {/* content and mask */}
             <div className="bg-gradient-to-t from-mask to-mask/50 absolute w-full h-full pt-20 pb-10">
               <div className="w-main h-full mx-auto grid grid-cols-3 gap-8">
@@ -66,7 +92,11 @@ export default function App() {
                 </div>
                 {/* popular movies container */}
                 <div className="hidden md:flex place-items-center">
-                  <MoviesShowcase movies={popularMovies} />
+                  <MoviesShowcase
+                    movies={popularMovies}
+                    onLoad={onLoad}
+                    loading={loading}
+                  />
                 </div>
               </div>
             </div>
