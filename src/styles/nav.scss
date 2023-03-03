@@ -1,0 +1,15 @@
+.nav {
+  width: 100%;
+  background-color: $colors-black;
+  display: flex;
+  justify-content: space-between;
+  .icon {
+    font-size: 2rem;
+  }
+  ul {
+    display: flex;
+    li {
+      display: flex;
+    }
+  }
+}
