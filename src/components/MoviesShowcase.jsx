@@ -59,7 +59,7 @@ export default function MoviesShowcase({ movies, onLoad, loading }) {
             },
           }}
           initial="loading"
-          animate={loading ? "loading" : "loaded"}
+          whileInView={loading ? "loading" : "loaded"}
           className="movie-miniature"
         >
           <div className="relative">

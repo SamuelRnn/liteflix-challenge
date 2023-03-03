@@ -38,7 +38,7 @@ export default function App() {
     <>
       <AnimatePresence>{loading && <LoaderScreen />}</AnimatePresence>
       {cover && popularMovies && (
-        <main>
+        <>
           <header className="h-screen relative overflow-hidden bg-black">
             {/* header background */}
             <motion.img
@@ -61,7 +61,7 @@ export default function App() {
                   initial={{ opacity: 0, y: -100 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1.2 }}
-                  className="fixed w-full h-20 z-50"
+                  className="fixed w-full z-50"
                 >
                   <Nav />
                 </motion.div>
@@ -101,7 +101,14 @@ export default function App() {
               </div>
             </div>
           </header>
-        </main>
+          <main className="flex md:hidden">
+            <MoviesShowcase
+              movies={popularMovies}
+              onLoad={onLoad}
+              loading={loading}
+            />
+          </main>
+        </>
       )}
     </>
   );

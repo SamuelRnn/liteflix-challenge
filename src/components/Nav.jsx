@@ -2,10 +2,17 @@ import picture from "../assets/profile.jpg";
 import { GoPlusSmall } from "react-icons/go";
 import { BiBell, BiMenuAltRight } from "react-icons/bi";
 import ButtonBase from "@mui/material/ButtonBase";
+import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 export default function Nav() {
+  useEffect(() => {}, []);
   return (
-    <div className="w-main mx-auto flex justify-between h-20">
+    <motion.nav
+      className="w-main mx-auto flex justify-between"
+      initial={{ height: "5rem" }}
+      // animate={{ height: "3rem" }}
+    >
       <div className="md:hidden flex items-center">
         <div className="rounded-full border border-zinc-300 overflow-hidden">
           <ButtonBase className="w-10 h-10  grid place-items-center">
@@ -54,6 +61,6 @@ export default function Nav() {
           />
         </li>
       </ul>
-    </div>
+    </motion.nav>
   );
 }
