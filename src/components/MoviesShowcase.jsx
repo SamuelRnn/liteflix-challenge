@@ -7,20 +7,24 @@ import Menu from "./Menu";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 
-export default function MoviesShowcase({ movies, onLoad, loading }) {
+export default function MoviesShowcase({ movies, onLoad, loading, className }) {
   const [selected, setSelected] = useState(0);
   const [open, setOpen] = useState(false);
   const toggleModal = () => {
     setOpen((open) => !open);
   };
+  const getSelected = () => {
+    const views = ["populares", "mis películas"];
+    return views[selected];
+  };
   return (
-    <div className="flex flex-col max-w-[12rem] ml-auto gap-y-4 items-center">
+    <div className={className}>
       {/* select and menu container */}
       <div className="relative">
         <ButtonBase onClick={() => setOpen(true)}>
           <div className="uppercase font-thin px-2 py-1 w-fit flex items-center gap-x-1">
             <span className="text-zinc-300">ver: </span>
-            <span className="text-white">populares</span>
+            <span className="text-white">{getSelected()}</span>
             <BiChevronDown
               className={`text-2xl ${
                 open && "rotate-180"
@@ -60,6 +64,7 @@ export default function MoviesShowcase({ movies, onLoad, loading }) {
           }}
           initial="loading"
           whileInView={loading ? "loading" : "loaded"}
+          viewport={{ once: true }}
           className="movie-miniature"
         >
           <div className="relative">

@@ -10,6 +10,7 @@ module.exports = {
       },
       width: {
         main: "min(80rem, 90%)",
+        modal: "min(30rem, 100%)",
       },
     },
   },

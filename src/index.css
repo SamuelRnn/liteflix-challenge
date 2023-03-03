@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  @apply text-white bg-dark;
+  @apply text-white bg-mask;
 }
 
 .movie-miniature:hover .play-icon {
