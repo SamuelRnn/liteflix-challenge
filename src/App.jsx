@@ -69,10 +69,14 @@ export default function App() {
             <AnimatePresence>
               {!loading && (
                 <motion.div
-                  initial={{ opacity: 0, y: -100 }}
+                  initial={{ opacity: 0, y: "-10rem" }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1.2 }}
-                  className="fixed w-full z-50"
+                  transition={{
+                    duration: 1.8,
+                    type: "spring",
+                    bounce: false,
+                  }}
+                  className="fixed w-full z-[100]"
                 >
                   <Nav setOpen={setOpen} isOpen={isOpen} />
                 </motion.div>
@@ -104,6 +108,7 @@ export default function App() {
                 {/* popular movies container */}
                 <div className="hidden md:flex place-items-center">
                   <MoviesShowcase
+                    delay
                     movies={popularMovies}
                     onLoad={onLoad}
                     loading={loading}
@@ -113,6 +118,7 @@ export default function App() {
               </div>
             </div>
           </header>
+          {/* mobile movies container */}
           <main className="flex md:hidden w-main mx-auto pb-14 overflow-hidden">
             <MoviesShowcase
               movies={popularMovies}

@@ -7,7 +7,13 @@ import Menu from "./Menu";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 
-export default function MoviesShowcase({ movies, onLoad, loading, className }) {
+export default function MoviesShowcase({
+  movies,
+  onLoad,
+  loading,
+  className,
+  delay = false,
+}) {
   const [selected, setSelected] = useState(0);
   const [open, setOpen] = useState(false);
   const toggleModal = () => {
@@ -44,8 +50,9 @@ export default function MoviesShowcase({ movies, onLoad, loading, className }) {
           )}
         </AnimatePresence>
       </div>
+
       {/* movies */}
-      {movies.map((movie, i) => (
+      {movies.map((movie, index) => (
         <motion.div
           key={movie.id}
           variants={{
@@ -53,8 +60,10 @@ export default function MoviesShowcase({ movies, onLoad, loading, className }) {
               opacity: 1,
               y: 0,
               transition: {
-                duration: 0.8,
-                ease: "easeOut",
+                type: "spring",
+                bounce: false,
+                delay: delay && (index + 1) * 0.2,
+                duration: 1.4,
               },
             },
             loading: {

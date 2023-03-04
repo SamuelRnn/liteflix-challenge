@@ -23,14 +23,14 @@ export default function Nav({ setOpen, isOpen }) {
     <motion.nav
       className="flex"
       variants={{
-        top: { height: "5rem" },
-        scrolled: { height: "3.6rem", backgroundColor: "#242424" },
+        top: { backgroundColor: "#00000000" },
+        scrolled: { backgroundColor: "#242424" },
       }}
       initial="top"
       animate={isTop ? "top" : "scrolled"}
-      transition={{ type: "spring" }}
+      transition={{ duration: 0.4 }}
     >
-      <div className="w-main mx-auto flex justify-between">
+      <div className="w-main mx-auto flex justify-between h-20">
         <div
           className={`md:hidden flex items-center ${
             isOpen && "opacity-0"
@@ -62,7 +62,7 @@ export default function Nav({ setOpen, isOpen }) {
           </li>
         </ul>
 
-        <ul className="flex gap-x-12 items-center">
+        <ul className="flex gap-x-12 items-center overflow-x-hidden">
           <li className="hidden md:flex rounded-full overflow-hidden">
             <ButtonBase className="h-10 w-10">
               <div className="text-2xl">
