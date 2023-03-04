@@ -36,5 +36,5 @@ export const postNewMovieImage = async (movieFileData) => {
     file: movieFileData,
   };
   const { data } = await axios.postForm(URL, body);
-  return getHostedImage(data.file);
+  return [data.file, getHostedImage(data.file)];
 };

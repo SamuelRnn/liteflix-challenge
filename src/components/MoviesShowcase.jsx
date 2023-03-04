@@ -6,6 +6,7 @@ import { useState } from "react";
 import Menu from "./Menu";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
+import { useStore } from "../store";
 
 export default function MoviesShowcase({
   movies,
@@ -14,6 +15,7 @@ export default function MoviesShowcase({
   className,
   delay = false,
 }) {
+  const myMovies = useStore((state) => state.myMovies);
   const [selected, setSelected] = useState(0);
   const [open, setOpen] = useState(false);
   const toggleModal = () => {

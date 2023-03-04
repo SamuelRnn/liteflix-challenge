@@ -5,9 +5,13 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { HiOutlinePaperClip } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
+import { useStore } from "../store";
 import { postNewMovieImage, isImage, simulateDelay } from "../services";
 
 export function ModalContent({ closeModal }) {
+  //store hook
+  const addMovie = useStore((state) => state.addMovie);
+
   // image charging simulation states
   const [loader, setLoader] = useState(false);
   const [interactionRendered, setInteractionState] = useState(null);
@@ -51,10 +55,10 @@ export function ModalContent({ closeModal }) {
   const onMovieSubmit = async () => {
     setSubmitting(true);
     const movie = { ...newMovie };
-    const image = await postNewMovieImage(newMovie.image);
+    const [id, image] = await postNewMovieImage(newMovie.image);
     movie.image = image;
-
-    localStorage.setItem("my_movies", JSON.stringify(movie));
+    movie.id = id;
+    addMovie(movie);
     //trigger animations
     await simulateDelay(2);
     setSucess(true);
