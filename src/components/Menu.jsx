@@ -14,9 +14,9 @@ export default function Menu({ selected, setSelected, toggleModal }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8, x: 20, y: -20 }}
+      initial={{ opacity: 0, scale: 0.8, x: 10, y: -10 }}
       animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-      exit={{ opacity: 0, scale: 0.8, x: 20, y: -20 }}
+      exit={{ opacity: 0, scale: 0.8, x: 10, y: -10 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       className="-bottom-[5.2rem] -right-3 bg-dark absolute w-52 py-2 flex shadow-xl rounded-sm z-50"
     >

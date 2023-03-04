@@ -28,7 +28,7 @@ export default function MoviesShowcase({
   return (
     <div className={className}>
       {/* select and menu container */}
-      <div className="relative">
+      <div className="relative w-full flex justify-center">
         <ButtonBase onClick={() => setOpen(true)}>
           <div className="uppercase font-thin px-2 py-1 w-fit flex items-center gap-x-1">
             <span className="text-zinc-300">ver: </span>
