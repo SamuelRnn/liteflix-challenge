@@ -54,50 +54,47 @@ export default function MoviesShowcase({
       </div>
 
       {/* movies */}
-      {movies.map((movie, index) => (
-        <motion.div
-          key={movie.id}
-          variants={{
-            loaded: {
-              opacity: 1,
-              y: 0,
-              transition: {
-                type: "spring",
-                bounce: false,
-                delay: delay && (index + 1) * 0.2,
-                duration: 1.4,
+      <div className="block space-y-3 overflow-y-scroll">
+        {movies.map((movie, index) => (
+          <motion.div
+            key={movie.id}
+            variants={{
+              loaded: {
+                opacity: 1,
+                y: 0,
+                transition: {
+                  type: "spring",
+                  bounce: false,
+                  delay: delay && (index + 1) * 0.2,
+                  duration: 1.4,
+                },
               },
-            },
-            loading: {
-              opacity: 0,
-              y: 40,
-            },
-          }}
-          initial="loading"
-          whileInView={loading ? "loading" : "loaded"}
-          viewport={{ once: true }}
-          className="movie-miniature"
-        >
-          <div className="relative">
-            <img
-              src={config.IMAGES_BASEPATH_w500 + movie.backdrop_path}
-              alt={movie.original_title}
-              className="object-cover"
-              onLoad={onLoad}
-            />
-            <div className="absolute w-full h-full grid place-items-center bg-mask/40 top-0">
-              <div className="text-center">
+              loading: {
+                opacity: 0,
+                y: 40,
+              },
+            }}
+            initial="loading"
+            whileInView={loading ? "loading" : "loaded"}
+            viewport={{ once: true }}
+            className="movie-miniature overflow-hidden"
+          >
+            <div className="relative">
+              <img
+                src={config.IMAGES_BASEPATH_w500 + movie.backdrop_path}
+                alt={movie.original_title}
+                className="object-cover"
+                onLoad={onLoad}
+              />
+              <div className="absolute w-full h-full grid place-items-center bg-mask/40 top-0">
                 <span className="mx-auto w-fit p-1 rounded-full border border-white/90 bg-mask/40 grid place-items-center play-icon transition-colors ease-out duration-500">
                   <BsPlay className="text-2xl" />
                 </span>
-                <p className="mt-2 text-sm uppercase font-thin px-2 overflow-hidden whitespace-nowrap text-ellipsis max-w-[192px]">
-                  {movie.original_title}
-                </p>
               </div>
             </div>
-          </div>
-        </motion.div>
-      ))}
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -83,7 +83,7 @@ export default function App() {
               )}
             </AnimatePresence>
             {/* content and mask */}
-            <div className="bg-gradient-to-t from-mask to-mask/50 absolute w-full h-full pt-20 pb-10">
+            <div className="bg-gradient-to-t from-mask to-mask/50 absolute w-full h-full pt-24 pb-10">
               <div className="w-main h-full mx-auto grid grid-cols-3 gap-8">
                 {/* cover description */}
                 <div className="md:col-span-2 col-span-3 flex flex-col justify-end md:pb-20 text-center md:text-left">
@@ -105,8 +105,8 @@ export default function App() {
                     </button>
                   </div>
                 </div>
-                {/* popular movies container */}
-                <div className="hidden md:flex place-items-center">
+                {/* movies container */}
+                <div className="hidden md:flex overflow-hidden overflow-y-hidden movies-showcase">
                   <MoviesShowcase
                     delay
                     movies={popularMovies}
