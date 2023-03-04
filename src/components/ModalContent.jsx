@@ -1,6 +1,7 @@
 import { ButtonBase } from "@mui/material";
 import { AnimatePresence } from "framer-motion";
 import { motion, useMotionValueEvent, useMotionValue } from "framer-motion";
+import { useEffect } from "react";
 import { useState } from "react";
 import { HiOutlinePaperClip } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
@@ -11,8 +12,12 @@ export function ModalContent({ closeModal }) {
   const [loader, setLoader] = useState(false);
   const [interactionRendered, setInteractionState] = useState(null);
   const [textRendered, setTextRendering] = useState(false);
-  const w_transition = useMotionValue(0);
-  useMotionValueEvent(w_transition, "animationComplete", () => {
+  const scaleX_transition = useMotionValue(0);
+
+  useMotionValueEvent(scaleX_transition, "animationStart", () => {
+    setTextRendering(false);
+  });
+  useMotionValueEvent(scaleX_transition, "animationComplete", () => {
     setTextRendering(true);
   });
   // form states
@@ -28,10 +33,15 @@ export function ModalContent({ closeModal }) {
     if (!files.length) return;
     setLoader(true);
     if (isImage(files[0])) {
-      setInteractionState("listo!");
       setNewMovie({ ...newMovie, image: files[0] });
+      setInteractionState("listo!");
     } else {
+      await simulateDelay(1.5);
       setInteractionState("ingrese una imagen!");
+
+      await simulateDelay(6);
+      setInteractionState(null);
+      setLoader(false);
     }
   };
 
@@ -41,13 +51,18 @@ export function ModalContent({ closeModal }) {
   const onMovieSubmit = async () => {
     setSubmitting(true);
     const movie = { ...newMovie };
-    // const imageUrl = await postNewMovieImage(newMovie.image);
+    const image = await postNewMovieImage(newMovie.image);
+    movie.image = image;
+
+    localStorage.setItem("my_movies", JSON.stringify(movie));
+    //trigger animations
     await simulateDelay(2);
     setSucess(true);
     await simulateDelay(0.5);
     setSubmitting(false);
   };
 
+  useEffect(() => {}, [loader]);
   return (
     <div className="flex h-full flex-col items-center relative justify-between pb-16 sm:pb-6">
       {/* close button desktop */}
@@ -63,15 +78,16 @@ export function ModalContent({ closeModal }) {
         className="h-24  w-full sm:w-[92%] text-sm uppercase overflow-hidden relative"
       >
         <motion.label
-          id="motion_label"
+          // id="motion_label"
           animate={{ opacity: loader ? 0 : 1 }}
-          htmlFor="movie_img"
+          // htmlFor="movie_img"
           className="absolute h-full w-full flex items-center justify-center cursor-pointer gap-x-2 border-2 border-dashed border-zinc-400"
         >
           <input
+            name="movie_img"
             accept="image/*"
             type="file"
-            id="movie_img"
+            // id="movie_img"
             className="hidden"
             onChange={onImageChange}
           />
@@ -84,27 +100,22 @@ export function ModalContent({ closeModal }) {
         <AnimatePresence>
           {loader && (
             <motion.div
-              variants={{
-                loading: { opacity: 1 },
-                loaded: { opacity: 0 },
-              }}
               key="image_loader"
-              initial="loaded"
-              animate="loading"
-              exit="loaded"
               className="h-24 w-full flex flex-col justify-center gap-4 relative"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             >
-              <div className="h-3 w-full bg-zinc-200/40 flex justify-start">
+              <div className="h-3 w-full bg-zinc-200/40">
                 <motion.div
-                  style={{ width: w_transition }}
-                  initial={{ width: 0 }}
-                  animate={{ width: "100%" }}
-                  transition={{ duration: 3 }}
-                  className={`h-3 w-full mr-auto ${
+                  className={`h-3 w-full ${
                     interactionRendered === "listo!" || !interactionRendered
                       ? "bg-aqua"
                       : "bg-red-400"
-                  } transition-colors duration-500`}
+                  } transition-colors duration-500 ease-out origin-left`}
+                  style={{ scaleX: scaleX_transition }}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: "100%", transition: { duration: 3 } }}
                 />
               </div>
               <motion.div
@@ -114,7 +125,7 @@ export function ModalContent({ closeModal }) {
               >
                 <h2
                   className={`py-2 ${
-                    interactionRendered === "reintentar"
+                    interactionRendered === "ingrese una imagen!"
                       ? "text-red-400"
                       : "text-aqua"
                   }`}
@@ -164,8 +175,26 @@ export function ModalContent({ closeModal }) {
         )}
       </AnimatePresence>
       {isSucess && (
-        <motion.div className="absolute w-full h-full top-0 bg-dark grid place-items-center z-30">
-          Sucess
+        <motion.div className="absolute w-full h-full top-0 bg-dark grid place-items-center z-30 text-center uppercase">
+          <div className="flex flex-col gap-5">
+            <h2 className="uppercase text-aqua text-2xl mb-8">
+              <span className="font-bold">lite</span>
+              <span>flix</span>
+            </h2>
+            <h3>felicitaciones</h3>
+            <p className="font-thin text-zinc-300 max-sm:max-w-[240px]">
+              <span className="font-normal text-zinc-100">
+                {newMovie.title}
+              </span>{" "}
+              fue correctamente subida
+            </p>
+            <button
+              onClick={closeModal}
+              className="mt-12 flex justify-center items-center h-12 bg-dark/40 uppercase w-full max-sm:max-w-[240px] border border-white/40 mx-auto"
+            >
+              ir al home
+            </button>
+          </div>
         </motion.div>
       )}
     </div>

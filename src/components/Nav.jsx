@@ -24,7 +24,7 @@ export default function Nav({ setOpen, isOpen }) {
       className="flex"
       variants={{
         top: { backgroundColor: "#00000000" },
-        scrolled: { backgroundColor: "#242424" },
+        scrolled: { backgroundColor: "rgb(12,12,12)" },
       }}
       initial="top"
       animate={isTop ? "top" : "scrolled"}

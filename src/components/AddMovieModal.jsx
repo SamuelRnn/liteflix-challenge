@@ -22,7 +22,7 @@ export default function AddMovieModal({ setOpen }) {
         initial="close"
         animate="open"
         exit="close"
-        className="hidden fixed sm:grid place-items-center z-[70] w-full h-screen bg-mask/60 backdrop-blur-sm"
+        className="hidden fixed sm:grid place-items-center z-[101] w-full h-screen bg-mask/60 backdrop-blur-sm"
       >
         <motion.div
           variants={{
