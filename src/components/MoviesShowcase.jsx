@@ -56,43 +56,44 @@ export default function MoviesShowcase({
       {/* movies */}
       <div className="block space-y-3">
         {movies.map((movie, index) => (
-          <motion.div
-            key={movie.id}
-            variants={{
-              loaded: {
-                opacity: 1,
-                x: 0,
-                transition: {
-                  type: "spring",
-                  bounce: false,
-                  delay: delay && (index + 1) * 0.2,
-                  duration: 1.4,
+          <div className="overflow-hidden">
+            <motion.div
+              key={movie.id}
+              variants={{
+                loaded: {
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                    type: "spring",
+                    bounce: false,
+                    delay: delay && (index + 1) * 0.2,
+                    duration: 1.4,
+                  },
                 },
-              },
-              loading: {
-                opacity: 0,
-                x: -24,
-              },
-            }}
-            initial="loading"
-            whileInView={loading ? "loading" : "loaded"}
-            viewport={{ once: true }}
-            className="movie-miniature overflow-hidden"
-          >
-            <div className="relative">
-              <img
-                src={config.IMAGES_BASEPATH_w500 + movie.backdrop_path}
-                alt={movie.original_title}
-                className="object-cover aspect-video"
-                onLoad={onLoad}
-              />
-              <div className="absolute w-full h-full grid place-items-center bg-mask/40 top-0">
-                <span className="mx-auto w-fit p-1 rounded-full border border-white/90 bg-mask/40 grid place-items-center play-icon transition-colors ease-out duration-500">
-                  <BsPlay className="text-2xl" />
-                </span>
+                loading: {
+                  opacity: 0,
+                  y: 30,
+                },
+              }}
+              initial="loading"
+              whileInView={loading ? "loading" : "loaded"}
+              viewport={{ once: true }}
+            >
+              <div className="relative">
+                <img
+                  src={config.IMAGES_BASEPATH_w500 + movie.backdrop_path}
+                  alt={movie.original_title}
+                  className="object-cover aspect-video"
+                  onLoad={onLoad}
+                />
+                <div className="absolute w-full h-full grid place-items-center bg-mask/40 top-0">
+                  <span className="mx-auto w-fit p-1 rounded-full border border-white/90 bg-mask/40 grid place-items-center play-icon transition-colors ease-out duration-500">
+                    <BsPlay className="text-2xl" />
+                  </span>
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         ))}
       </div>
     </div>

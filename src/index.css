@@ -5,17 +5,11 @@
 :root {
   @apply text-white bg-mask;
 }
-
+/* 
 ::-webkit-scrollbar {
   width: 10px;
   background-color: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.5);
-}
-/* .movie-miniature:hover .play-icon {
-  @apply bg-aqua text-dark border-dark;
 } */
-.movies-container {
-  box-shadow: inset 0px -91px 55px -74px rgba(12 12 12);
-}
