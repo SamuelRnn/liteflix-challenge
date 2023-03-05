@@ -1,5 +1,6 @@
 import picture from "../assets/profile.jpg";
 import { GoPlusSmall } from "react-icons/go";
+import { BsPlusLg } from "react-icons/bs";
 import { BiBell, BiMenuAltRight } from "react-icons/bi";
 import ButtonBase from "@mui/material/ButtonBase";
 import { motion } from "framer-motion";
@@ -41,7 +42,7 @@ export default function Nav({ setOpen, isOpen }) {
             onClick={isOpen ? null : openModal}
           >
             <ButtonBase className="w-10 h-10  grid place-items-center">
-              <GoPlusSmall className="text-2xl" />
+              <BsPlusLg />
             </ButtonBase>
           </div>
         </div>

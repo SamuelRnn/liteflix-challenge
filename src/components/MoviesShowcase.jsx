@@ -28,10 +28,10 @@ export default function MoviesShowcase({
   return (
     <div className={className}>
       {/* select and menu container */}
-      <div className="relative w-full flex justify-center">
+      <div className="mx-auto w-[12rem] sm:w-full flex justify-center sticky top-0 z-20">
         <ButtonBase onClick={() => setOpen(true)}>
           <div className="uppercase font-thin px-2 py-1 w-fit flex items-center gap-x-1">
-            <span className="text-zinc-300">ver: </span>
+            <span className="text-zinc-300 pl-2">ver: </span>
             <span className="text-white">{getSelected()}</span>
             <BiChevronDown
               className={`text-2xl ${
@@ -54,14 +54,14 @@ export default function MoviesShowcase({
       </div>
 
       {/* movies */}
-      <div className="block space-y-3 overflow-y-scroll">
+      <div className="block space-y-3">
         {movies.map((movie, index) => (
           <motion.div
             key={movie.id}
             variants={{
               loaded: {
                 opacity: 1,
-                y: 0,
+                x: 0,
                 transition: {
                   type: "spring",
                   bounce: false,
@@ -71,7 +71,7 @@ export default function MoviesShowcase({
               },
               loading: {
                 opacity: 0,
-                y: 40,
+                x: -24,
               },
             }}
             initial="loading"
@@ -83,7 +83,7 @@ export default function MoviesShowcase({
               <img
                 src={config.IMAGES_BASEPATH_w500 + movie.backdrop_path}
                 alt={movie.original_title}
-                className="object-cover"
+                className="object-cover aspect-video"
                 onLoad={onLoad}
               />
               <div className="absolute w-full h-full grid place-items-center bg-mask/40 top-0">
