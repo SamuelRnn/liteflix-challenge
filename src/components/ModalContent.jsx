@@ -10,13 +10,15 @@ import { postNewMovieImage, isImage, simulateDelay } from "../services";
 
 export function ModalContent({ closeModal }) {
   //store hook
+
   const addMovie = useStore((state) => state.addMovie);
 
-  // image charging simulation states
+  // image charging states
   const [loader, setLoader] = useState(false);
   const [interactionRendered, setInteractionState] = useState(null);
   const [textRendered, setTextRendering] = useState(false);
   const scaleX_transition = useMotionValue(0);
+  const [hightlightDropTarget, setDropTargetHighlighting] = useState(false);
 
   useMotionValueEvent(scaleX_transition, "animationStart", () => {
     setTextRendering(false);
@@ -33,7 +35,7 @@ export function ModalContent({ closeModal }) {
   const [isSubmitting, setSubmitting] = useState(false);
   const [isSucess, setSucess] = useState(false);
 
-  const onImageChange = async ({ target: { files } }) => {
+  const changeImage = async (files) => {
     if (!files.length) return;
     setLoader(true);
     if (isImage(files[0])) {
@@ -49,6 +51,9 @@ export function ModalContent({ closeModal }) {
     }
   };
 
+  const onImageChange = async ({ target: { files } }) => {
+    await changeImage(files);
+  };
   const onTitleChange = ({ target }) => {
     setNewMovie({ ...newMovie, title: target.value });
   };
@@ -65,8 +70,12 @@ export function ModalContent({ closeModal }) {
     await simulateDelay(0.5);
     setSubmitting(false);
   };
-
-  useEffect(() => {}, [loader]);
+  //drag handlers
+  const onImageDragOn = async (event) => {
+    event.preventDefault();
+    const files = event.dataTransfer.files;
+    await changeImage(files);
+  };
   return (
     <div className="flex h-full flex-col items-center relative justify-between pb-16 sm:pb-6">
       {/* close button desktop */}
@@ -78,34 +87,41 @@ export function ModalContent({ closeModal }) {
       {/* content */}
       <h2 className="text-aqua uppercase text-lg mt-6">agregar película</h2>
       <div
-        id="loader and uploader"
+        id="loader_n_uploader"
         className="h-24  w-full sm:w-[92%] text-sm uppercase overflow-hidden relative"
       >
+        <div className="h-full w-full flex items-center justify-center gap-x-2 absolute z-[0]">
+          <HiOutlinePaperClip className="rotate-90 text-xl text-" />
+          <span className="block md:hidden">Agregá un archivo</span>
+          <span className="hidden md:block">
+            Agregá un archivo o arrastralo y soltalo aquí
+          </span>
+        </div>
         <motion.label
-          // id="motion_label"
+          htmlFor="movie_img"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={onImageDragOn}
           animate={{ opacity: loader ? 0 : 1 }}
-          // htmlFor="movie_img"
-          className="absolute h-full w-full flex items-center justify-center cursor-pointer gap-x-2 border-2 border-dashed border-zinc-400"
+          onDragEnter={() => setDropTargetHighlighting(true)}
+          onDragLeave={() => setDropTargetHighlighting(false)}
+          className={`absolute h-full w-full cursor-pointer border-2 border-dashed border-zinc-400  ${
+            hightlightDropTarget && "bg-zinc-200/30"
+          } transition-colors duration-500 ease-out`}
         >
           <input
             name="movie_img"
             accept="image/*"
             type="file"
-            // id="movie_img"
+            id="movie_img"
             className="hidden"
             onChange={onImageChange}
           />
-          <HiOutlinePaperClip className="rotate-90 text-xl" />
-          <span className="block md:hidden">Agregá un archivo</span>
-          <span className="hidden md:block">
-            Agregá un archivo o arrastralo y soltalo aquí
-          </span>
         </motion.label>
         <AnimatePresence>
           {loader && (
             <motion.div
               key="image_loader"
-              className="h-24 w-full flex flex-col justify-center gap-4 relative"
+              className="h-24 w-full flex flex-col justify-center gap-4 relative bg-dark"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -169,9 +185,9 @@ export function ModalContent({ closeModal }) {
           <motion.div
             key="movie_create_spinner"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={{ opacity: 1, transition: { duration: 0.2 } }}
             exit={{ opacity: 0, scale: 0.8, y: -50 }}
-            transition={{ duration: 0.5, type: "spring", bounce: false }}
+            transition={{ duration: 0.5, type: "spring" }}
             className="absolute w-full h-full top-0 bg-dark grid place-items-center  z-50"
           >
             <div className="border-t-transparent animate-spin rounded-full border-aqua border-4 h-12 w-12" />
@@ -194,7 +210,7 @@ export function ModalContent({ closeModal }) {
             </p>
             <button
               onClick={closeModal}
-              className="mt-12 flex justify-center items-center h-12 bg-dark/40 uppercase w-full max-sm:max-w-[240px] border border-white/40 mx-auto"
+              className="mt-12 flex justify-center items-center h-12 bg-dark/40 uppercase w-full max-w-[240px] border border-white/40 mx-auto"
             >
               ir al home
             </button>
