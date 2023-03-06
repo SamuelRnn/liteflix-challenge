@@ -37,11 +37,16 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (window.innerWidth > 640) {
-      setDesktop(true);
-    } else {
-      setDesktop(false);
-    }
+    const enableDesktop = () => {
+      if (window.innerWidth > 640) {
+        setDesktop(true);
+      } else {
+        setDesktop(false);
+      }
+    };
+    enableDesktop();
+    window.onresize = () => enableDesktop();
+
     document.body.style.overflow = "hidden";
     //for hot reload only
     if (!loading) document.body.style.overflow = "auto";
