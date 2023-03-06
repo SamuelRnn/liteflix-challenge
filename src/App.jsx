@@ -1,11 +1,12 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { config } from "./config";
 import { getFeaturedMovie, getPopularMovies } from "./services";
 import { Nav, MoviesShowcase, LoaderScreen, AddMovieModal } from "./components";
 import { GoPlusSmall } from "react-icons/go";
 import { BsPlay } from "react-icons/bs";
 import { motion, AnimatePresence } from "framer-motion";
+import SimpleBar from "simplebar-react";
+import "simplebar-react/dist/simplebar.min.css";
 
 export default function App() {
   const [cover, setCover] = useState(null);
@@ -13,6 +14,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [_, setLoadedImagesCount] = useState(0);
   const [isOpen, setOpen] = useState(false);
+  const [isDesktop, setDesktop] = useState(true);
 
   const fetchData = async () => {
     Promise.all([getFeaturedMovie(), getPopularMovies()]).then((res) => {
@@ -35,19 +37,21 @@ export default function App() {
   };
 
   useEffect(() => {
+    if (window.innerWidth > 640) {
+      setDesktop(true);
+    } else {
+      setDesktop(false);
+    }
     document.body.style.overflow = "hidden";
     //for hot reload only
     if (!loading) document.body.style.overflow = "auto";
     //----------------
     fetchData();
   }, []);
-
   return (
     <>
-      <AnimatePresence>
-        {isOpen && <AddMovieModal setOpen={setOpen} />}
-      </AnimatePresence>
       <AnimatePresence>{loading && <LoaderScreen />}</AnimatePresence>
+
       {cover && popularMovies && (
         <>
           <header className="h-screen relative overflow-hidden bg-black">
@@ -76,7 +80,7 @@ export default function App() {
                     type: "spring",
                     bounce: false,
                   }}
-                  className="fixed w-full z-[100]"
+                  className="fixed w-full z-[102]"
                 >
                   <Nav setOpen={setOpen} isOpen={isOpen} />
                 </motion.div>
@@ -84,7 +88,7 @@ export default function App() {
             </AnimatePresence>
             {/* content and mask */}
             <div className="bg-gradient-to-t from-mask to-mask/50 absolute w-full h-full pt-24 pb-12">
-              <div className="w-main h-full mx-auto grid grid-cols-3 gap-8 overflow-hidden">
+              <div className="w-main h-full mx-auto grid grid-cols-3 gap-8">
                 {/* cover description */}
                 <div className="col-span-3 md:col-span-2 flex flex-col justify-end md:pb-20 text-center md:text-left">
                   <p className="uppercase font-thin md:text-lg">
@@ -106,20 +110,22 @@ export default function App() {
                   </div>
                 </div>
                 {/* movies container */}
-                <div className="hidden md:flex md:overflow-y-auto">
+                <SimpleBar
+                  className="hidden md:flex overflow-y-auto overflow-x-hidden"
+                  forceVisible="y"
+                >
                   <MoviesShowcase
-                    delay
                     movies={popularMovies}
                     onLoad={onLoad}
                     loading={loading}
-                    className="flex flex-col ml-auto gap-y-4 items-center max-w-[200px] my-auto"
+                    className="h-full ml-auto gap-y-4 items-center max-w-[200px]"
                   />
-                </div>
+                </SimpleBar>
               </div>
             </div>
           </header>
           {/* mobile movies container */}
-          <main className="flex md:hidden w-main mx-auto pb-14 overflow-hidden mt-8">
+          <main className="flex md:hidden w-main mx-auto pb-14 mt-8">
             <MoviesShowcase
               movies={popularMovies}
               onLoad={onLoad}
@@ -129,6 +135,9 @@ export default function App() {
           </main>
         </>
       )}
+      <AnimatePresence>
+        {isOpen && <AddMovieModal setOpen={setOpen} isDesktop={isDesktop} />}
+      </AnimatePresence>
     </>
   );
 }

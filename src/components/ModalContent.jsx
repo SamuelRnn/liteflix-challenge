@@ -1,7 +1,6 @@
 import { ButtonBase } from "@mui/material";
 import { AnimatePresence } from "framer-motion";
 import { motion, useMotionValueEvent, useMotionValue } from "framer-motion";
-import { useEffect } from "react";
 import { useState } from "react";
 import { HiOutlinePaperClip } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
@@ -10,7 +9,6 @@ import { postNewMovieImage, isImage, simulateDelay } from "../services";
 
 export function ModalContent({ closeModal }) {
   //store hook
-
   const addMovie = useStore((state) => state.addMovie);
 
   // image charging states
@@ -38,14 +36,16 @@ export function ModalContent({ closeModal }) {
   const changeImage = async (files) => {
     if (!files.length) return;
     setLoader(true);
+
     if (isImage(files[0])) {
       setNewMovie({ ...newMovie, image: files[0] });
       setInteractionState("listo!");
     } else {
       await simulateDelay(1.5);
       setInteractionState("ingrese una imagen!");
+      setDropTargetHighlighting(false);
 
-      await simulateDelay(6);
+      await simulateDelay(4);
       setInteractionState(null);
       setLoader(false);
     }
@@ -60,12 +60,12 @@ export function ModalContent({ closeModal }) {
   const onMovieSubmit = async () => {
     setSubmitting(true);
     const movie = { ...newMovie };
-    const [id, image] = await postNewMovieImage(newMovie.image);
+    const [id, image] = await postNewMovieImage(movie.image);
     movie.image = image;
     movie.id = id;
     addMovie(movie);
     //trigger animations
-    await simulateDelay(2);
+    await simulateDelay(1.5);
     setSucess(true);
     await simulateDelay(0.5);
     setSubmitting(false);
@@ -76,6 +76,7 @@ export function ModalContent({ closeModal }) {
     const files = event.dataTransfer.files;
     await changeImage(files);
   };
+
   return (
     <div className="flex h-full flex-col items-center relative justify-between pb-16 sm:pb-6">
       {/* close button desktop */}

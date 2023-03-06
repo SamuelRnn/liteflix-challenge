@@ -6,9 +6,11 @@ import ButtonBase from "@mui/material/ButtonBase";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useStore } from "../store";
 
 export default function Nav({ setOpen, isOpen }) {
   const [isTop, setTop] = useState(true);
+  const modalisOpen = useStore((state) => state.modalIsOpen);
 
   useEffect(() => {
     window.onscroll = () => {
@@ -19,6 +21,11 @@ export default function Nav({ setOpen, isOpen }) {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (modalisOpen) setTop(true);
+    if (!modalisOpen && scrollY !== 0) setTop(false);
+  }, [modalisOpen]);
   const openModal = () => setOpen(true);
   return (
     <motion.nav

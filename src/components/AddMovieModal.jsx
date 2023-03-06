@@ -1,19 +1,24 @@
+import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
+import { useStore } from "../store";
 import { ModalContent } from "./ModalContent";
 
-export default function AddMovieModal({ setOpen }) {
+export default function AddMovieModal({ setOpen, isDesktop }) {
+  const changeModalState = useStore((state) => state.changeModalState);
   useEffect(() => {
     document.body.style.overflow = "hidden";
+    changeModalState(true);
     return () => {
       document.body.style.overflow = "auto";
     };
   }, []);
-  const closeModal = () => setOpen(false);
-  return (
-    <>
-      {/* desktop */}
+  const closeModal = () => {
+    changeModalState(false);
+    setOpen(false);
+  };
+  if (isDesktop) {
+    return (
       <motion.div
         variants={{
           close: { opacity: 0 },
@@ -22,7 +27,7 @@ export default function AddMovieModal({ setOpen }) {
         initial="close"
         animate="open"
         exit="close"
-        className="hidden fixed sm:grid place-items-center z-[101] w-full h-screen bg-mask/60 backdrop-blur-sm"
+        className="grid top-0 fixed place-items-center z-[103] w-full h-screen bg-mask/60 backdrop-blur-sm"
       >
         <motion.div
           variants={{
@@ -38,7 +43,9 @@ export default function AddMovieModal({ setOpen }) {
           <ModalContent closeModal={closeModal} />
         </motion.div>
       </motion.div>
-      {/* mobile */}
+    );
+  } else {
+    return (
       <motion.div
         variants={{
           close: { x: "-100%" },
@@ -48,12 +55,12 @@ export default function AddMovieModal({ setOpen }) {
         animate="open"
         exit="close"
         transition={{ type: "spring", bounce: false, duration: 0.7 }}
-        className="fixed top-0 sm:hidden bg-dark h-screen w-full pt-28 pb-12 z-[70]"
+        className="fixed top-0 bg-dark h-screen w-full pt-28 pb-12 z-[101]"
       >
-        <motion.div className="h-full w-[90%] mx-auto overflow-hidden">
+        <motion.div className="w-[90%] mx-auto overflow-hidden h-full">
           <ModalContent closeModal={closeModal} />
         </motion.div>
       </motion.div>
-    </>
-  );
+    );
+  }
 }
