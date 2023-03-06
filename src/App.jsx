@@ -92,7 +92,11 @@ export default function App() {
               )}
             </AnimatePresence>
             {/* content and mask */}
-            <div className="bg-gradient-to-t from-mask to-mask/50 absolute w-full h-full pt-24 pb-12">
+            <div
+              className={`${
+                !loading && "bg-gradient-to-t from-mask to-mask/50"
+              } absolute w-full h-full pt-24 pb-12`}
+            >
               <div className="w-main h-full mx-auto grid grid-cols-3 gap-8">
                 {/* cover description */}
                 <div className="col-span-3 md:col-span-2 flex flex-col justify-end md:pb-20 text-center md:text-left">
